@@ -32,7 +32,7 @@ class Post(models.Model):
 
     # Creating a field for Status class.
     status = models.CharField(
-        max_length=2,
+        max_length=250,
         choices=Status.choices,
         default=Status.DRAFT
     )
