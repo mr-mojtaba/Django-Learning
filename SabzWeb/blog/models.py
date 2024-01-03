@@ -2,6 +2,7 @@ from django.db import models
 
 # Standard python library
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -11,6 +12,9 @@ class Post(models.Model):
         DRAFT = ' DR', 'Draft'
         PUBLISHED = 'PB', 'Published'
         REJECTED = 'RJ', 'Rejected'
+
+    # Creating a many-to-one field for user.
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_posts")
 
     # To create fields
     title = models.CharField(max_length=250)
@@ -26,16 +30,17 @@ class Post(models.Model):
     # Date of update
     updated = models.DateTimeField(auto_now=True)
 
-    # Creating a field for Status class.S
+    # Creating a field for Status class.
     status = models.CharField(
         max_length=2,
         choices=Status.choices,
         default=Status.DRAFT
     )
 
-    # Sorting the table by publish.
     class Meta:
+        # Sorting the table by publish.
         ordering = ['-publish']
+        # Specifying the indexing.
         indexes = [
             models.Index(fields=['-publish'])
         ]
