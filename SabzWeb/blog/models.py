@@ -1,6 +1,6 @@
 from django.db import models
 
-# Standard python library
+# Standard python library.
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -14,20 +14,24 @@ class Post(models.Model):
         REJECTED = 'RJ', 'Rejected'
 
     # Creating a many-to-one field for user.
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_posts")
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="user_posts"
+    )
 
-    # To create fields
+    # To create fields.
     title = models.CharField(max_length=250)
     description = models.TextField()
     slug = models.SlugField(max_length=250)
 
-    # Date of publication
+    # Date of publication.
     publish = models.DateTimeField(default=timezone.now)
 
-    # Recording the moment the post was created
+    # Recording the moment the post was created.
     created = models.DateTimeField(auto_now_add=True)
 
-    # Date of update
+    # Date of update.
     updated = models.DateTimeField(auto_now=True)
 
     # Creating a field for Status class.
