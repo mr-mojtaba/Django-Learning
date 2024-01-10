@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-from . models import Post
+from .models import Post
 
 
 # Create your views here.
@@ -13,7 +13,7 @@ def post_list(request):
     context = {
         'posts': posts,
     }
-    return render(request, "template.html", context)
+    return render(request, "blog/list.html", context)
 
 
 def post_detail(request, id):
@@ -24,4 +24,4 @@ def post_detail(request, id):
     context = {
         'post': post,
     }
-    return render(request, "404template.html", context)
+    return render(request, "blog/detail.html", context)
