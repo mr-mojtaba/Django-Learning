@@ -3,8 +3,13 @@ from django.contrib import admin
 # For customization of the admin panel
 from .models import *
 
+admin.sites.AdminSite.site_title = "پنل"
+admin.sites.AdminSite.site_header = "پنل مدیریت جنگو"
+admin.sites.AdminSite.index_title = "پنل مدیریت"
+
 
 # Register your models here.
+
 # Customization of the admin panel.
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):

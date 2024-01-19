@@ -23,28 +23,45 @@ class Post(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name="user_posts"
+        related_name="user_posts",
+        verbose_name="نویسنده"
     )
 
     # To create fields.
-    title = models.CharField(max_length=250)
-    description = models.TextField()
-    slug = models.SlugField(max_length=250)
+    title = models.CharField(
+        max_length=250,
+        verbose_name="عنوان"
+    )
+    description = models.TextField(
+        verbose_name="توضیحات"
+    )
+    slug = models.SlugField(
+        max_length=250,
+        verbose_name="نامک"
+    )
 
     # Date of publication.
-    publish = models.DateTimeField(default=timezone.now)
+    publish = models.DateTimeField(
+        default=timezone.now,
+        verbose_name="تاریخ انتشار"
+    )
 
     # Recording the moment the post was created.
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(
+        auto_now_add=True
+    )
 
     # Date of update.
-    updated = models.DateTimeField(auto_now=True)
+    updated = models.DateTimeField(
+        auto_now=True
+    )
 
     # Creating a field for Status class.
     status = models.CharField(
         max_length=250,
         choices=Status.choices,
-        default=Status.DRAFT
+        default=Status.DRAFT,
+        verbose_name="وضعیت"
     )
 
     # Keeping the default manager(objects).
@@ -59,6 +76,9 @@ class Post(models.Model):
         indexes = [
             models.Index(fields=['-publish'])
         ]
+        # To change the name of the application in the Django panel.
+        verbose_name = "پست"
+        verbose_name_plural = "پست ها"
 
     # Overwriting the method as the title.
     def __str__(self):
