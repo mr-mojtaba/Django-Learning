@@ -3,6 +3,7 @@ from django.db import models
 # Standard python library.
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 # Need to install ( pip install django_jalali )
 from django_jalali.db import models as jmodels
@@ -87,3 +88,6 @@ class Post(models.Model):
     # Overwriting the method as the title.
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('blog:post_detail', args=[self.id])
