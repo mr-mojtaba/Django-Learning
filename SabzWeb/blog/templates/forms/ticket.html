@@ -4,7 +4,30 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <label for="name">نام و نام خانوادگی :</label>
+        <input type="text" name="name" id="name" required>
+        <br>
+
+        <label for="subject">موضوع :</label>
+        <select name="subject" id="subject">
+            <option value="پیشنهاد">پیشنهاد</option>
+            <option value="انتقاد">انتقاد</option>
+            <option value="گزارش">گزارش</option>
+        </select>
+        <br>
+
+        <label for="message">پیام :</label>
+        <textarea name="message" id="message"></textarea>
+        <br>
+
+        <label for="phone">شماره تماس :</label>
+        <input type="text" name="phone" id="phone" maxlength="11" required>
+        <br>
+
+        <label for="email">آدرس ایمیل :</label>
+        <input type="email" name="email" id="email">
+        <br>
+
         <input type="submit" value="ثبت تیکت">
     </form>
 {% endblock %}
