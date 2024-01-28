@@ -15,4 +15,3 @@ urlpatterns = [
     path('posts/<pk>', views.PostDetailView.as_view(), name='post_detail'),
     path('ticket', views.ticket, name='ticket'),
 ]
- 
