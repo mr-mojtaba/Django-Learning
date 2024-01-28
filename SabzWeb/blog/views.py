@@ -81,7 +81,7 @@ def ticket(request):
             # Storage in the database.
             ticket_obj.save()
 
-            return redirect("blog:ticket")
+            return redirect("blog:index")
     else:
         # Creating a variable from TicketForm with no value.
         form = TicketForm()
