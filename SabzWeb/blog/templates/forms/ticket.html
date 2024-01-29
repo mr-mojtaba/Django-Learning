@@ -61,6 +61,7 @@
             {% if field.errors %}
                 {% for error in field.errors %}
                     {{ field.label }} : {{ error }}
+                    <br>
                 {% endfor %}
             {% endif %}
         {% endfor %}
