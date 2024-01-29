@@ -2,6 +2,11 @@ from django import forms
 
 
 class TicketForm(forms.Form):
+    SUBJECT_CHOICES = (
+        ('پیشنهاد', 'پیشنهاد'),
+        ('انتقاد', 'انتقاد'),
+        ('گزارش', 'گزارش'),
+    )
 
     message = forms.CharField(widget=forms.Textarea, required=True)
     name = forms.CharField(max_length=250, required=True)
