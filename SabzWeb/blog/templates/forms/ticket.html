@@ -5,29 +5,69 @@
     <form method="post">
         {% csrf_token %}
         <label for="name">نام و نام خانوادگی :</label>
-        <input type="text" name="name" id="name" required>
+        <input type="text" name="name" id="name" required
+               {% if form.name.value %} value="{{ form.name.value }}" {% endif %}>
         <br>
 
         <label for="subject">موضوع :</label>
         <select name="subject" id="subject">
-            <option value="پیشنهاد">پیشنهاد</option>
-            <option value="انتقاد">انتقاد</option>
-            <option value="گزارش">گزارش</option>
+            <option value="پیشنهاد"
+                {% if form.subject.value == "پیشنهاد" %}
+                    selected
+                {% endif %}
+                >
+                پیشنهاد
+            </option>
+
+            <option value="انتقاد"
+                {% if form.subject.value == "انتقاد" %}
+                    selected
+                {% endif %}
+                >
+                انتقاد
+            </option>
+
+            <option value="گزارش"
+                {% if form.subject.value == "گزارش" %}
+                    selected
+                {% endif %}
+                >
+                گزارش
+            </option>
         </select>
         <br>
 
         <label for="message">پیام :</label>
-        <textarea name="message" id="message"></textarea>
+        <textarea name="message" id="message">{% if form.message.value %}{{ form.message.value }}{% endif %}</textarea>
         <br>
 
         <label for="phone">شماره تماس :</label>
-        <input type="text" name="phone" id="phone" maxlength="11" required>
+        <input type="text" name="phone" id="phone" maxlength="11" required
+            {% if form.phone.value %} value="{{ form.phone.value }}" {% endif %}>
         <br>
 
         <label for="email">آدرس ایمیل :</label>
-        <input type="email" name="email" id="email">
+        <input type="email" name="email" id="email"
+            {% if form.email.value %} value="{{ form.email.value }}" {% endif %}>
         <br>
 
         <input type="submit" value="ثبت تیکت">
     </form>
+
+    {% if form.errors %}
+        <h5>لطفا خطاهای زیر را اصلاح کنید!</h5>
+        <br>
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    {{ field.label }} : {{ error }}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if form.non_field_errors %}
+        {{ form.non_field_errors }}
+    {% endif %}
+
 {% endblock %}
