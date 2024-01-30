@@ -46,16 +46,16 @@ class PostListView(ListView):
     template_name = "blog/list.html"
 
 
-# def post_detail(request, id):
-#     post = get_object_or_404(Post, id=id, status=Post.Status.PUBLISHED)
-#     context = {
-#         'post': post,
-#     }
-#     return render(request, "blog/detail.html", context)
+def post_detail(request, id):
+    post = get_object_or_404(Post, id=id, status=Post.Status.PUBLISHED)
+    context = {
+        'post': post,
+    }
+    return render(request, "blog/detail.html", context)
 
-class PostDetailView(DetailView):
-    model = Post
-    template_name = "blog/detail.html"
+# class PostDetailView(DetailView):
+#     model = Post
+#     template_name = "blog/detail.html"
 
 
 def ticket(request):
