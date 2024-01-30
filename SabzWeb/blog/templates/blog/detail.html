@@ -10,4 +10,25 @@
     <h4>Author: {{ post.author }}</h4>
     <h4>{{ post.publish | jformat:'%Y/%m/%d - %H:%m' }}</h4>
     <hr>
+
+    <div>
+        {% with comments.count as cm_count %}
+        {{ comments.count }} comments {{ cm_count | pluralize }}
+    </div>
+
+    <div>
+        {% for cm in comments %}
+            {{ cm.body | linebreaks }}
+            <br>
+            {{ cm.name }}
+        {% empty %}
+            کامنتی وجود ندارد!
+        {% endfor %}
+    </div>
+
+    <form method="post" action="{% url 'blog:post_comment' post.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="افزودن کامنت">
+    </form>
 {% endblock %}
