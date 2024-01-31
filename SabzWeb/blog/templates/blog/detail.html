@@ -13,7 +13,8 @@
 
     <div>
         {% with comments.count as cm_count %}
-        {{ comments.count }} comments {{ cm_count | pluralize }}
+            {{ comments.count }} comment{{ cm_count | pluralize }}
+        {% endwith %}
     </div>
 
     <div>

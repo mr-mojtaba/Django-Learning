@@ -99,7 +99,7 @@ def ticket(request):
 
 @require_POST
 def post_comment(request, post_id):
-    post = get_object_or_404(Comment, id=post_id, status=Post.Status.PUBLISHED)
+    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
     comment = None
     form = CommentForm(data=request.POST)
     if form.is_valid():
