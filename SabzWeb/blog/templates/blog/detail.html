@@ -11,21 +11,23 @@
     <h4>{{ post.publish | jformat:'%Y/%m/%d - %H:%m' }}</h4>
     <hr>
 
-    <div>
-        {% with comments.count as cm_count %}
+    {% with comments.count as cm_count %}
+        <div>
             {{ comments.count }} comment{{ cm_count | pluralize }}
-        {% endwith %}
-    </div>
+        </div>
 
-    <div>
-        {% for cm in comments %}
-            {{ cm.body | linebreaks }}
-            <br>
-            {{ cm.name }}
-        {% empty %}
-            کامنتی وجود ندارد!
-        {% endfor %}
-    </div>
+        <div>
+            {% for cm in comments %}
+                <br>
+                <hr>
+                {{ cm.name }}
+                {{ cm.body | linebreaks }}
+                <hr>
+            {% empty %}
+                کامنتی وجود ندارد!
+            {% endfor %}
+        </div>
+    {% endwith %}
 
     <form method="post" action="{% url 'blog:post_comment' post.id %}">
         {% csrf_token %}

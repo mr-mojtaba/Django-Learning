@@ -4,14 +4,15 @@
 
 {% block content %}
     {% if comment%}
-        کامنت شما ثبت شد.
+        کامنت شما ثبت شد و در انتظار تایید مدیر است.
+        <br>
         <a href="{{ post.get_absolute_url }}">بازگشت به پست</a>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="افزودن کامنت">
+        </form>
     {% endif %}
-
-    <form method="post" action="{% url 'blog:post_comment' post.id %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="افزودن کامنت">
-    </form>
 
 {% endblock %}
