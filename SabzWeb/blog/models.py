@@ -68,6 +68,10 @@ class Post(models.Model):
         verbose_name="وضعیت"
     )
 
+    reading_time = models.PositiveIntegerField(
+        verbose_name="زمان مطالعه",
+    )
+
     # Keeping the default manager(objects).
     # objects = models.Manager()
     objects = jmodels.jManager()
