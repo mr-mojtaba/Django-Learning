@@ -7,5 +7,12 @@
     <p>تعداد کامنت ها: {% total_posts %}</p>
     <p>تاریخ آخرین پست: {% last_post_date %}</p>
 
-    {% latest_posts %}
+    {% latest_posts 3 %}
+
+    <h2>محبوب ترین پست ها:</h2>
+    {% most_popular_posts 3 as pop_posts %}
+    {% for post in pop_posts %}
+        <br>
+        <a href="{{ post.get_absolute_url }}">{{post.title}}: with {{ post.comments_count }} comment</a>
+    {% endfor %}
 {% endblock %}
