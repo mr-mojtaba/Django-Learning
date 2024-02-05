@@ -39,3 +39,14 @@ class CommentForm(forms.ModelForm):
             'name',
             'body',
         ]
+
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'placeholder': 'نام و نام خانوادگی',
+                'class': 'cm-name',
+            }),
+            'body': forms.TextInput(attrs={
+                'placeholder': 'متن',
+                'class': 'cm-body',
+            }),
+        }
