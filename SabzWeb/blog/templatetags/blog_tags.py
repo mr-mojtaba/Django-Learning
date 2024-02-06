@@ -1,9 +1,10 @@
 from django import template
-from ..models import Post, Comment
+from ..models import Post, Comment, User
 from django.db.models import Count
 # Need to install (pip install markdown)
 from markdown import markdown
 from django.utils.safestring import mark_safe
+from django.db.models import Max, Min
 
 # Creating an object to access the simple_tag decorator
 register = template.Library()
@@ -29,6 +30,12 @@ def most_popular_posts(count=5):
     return Post.published.annotate(
         comments_count=Count('comments')
     ).order_by('-comments_count')[:count]
+
+
+@register.simple_tag
+def most_reading_time():
+    mrt = Post.published.aggregate(Max('reading_time'))
+    return mrt['reading_time__max']
 
 
 @register.inclusion_tag("partials/latest_posts.html")
