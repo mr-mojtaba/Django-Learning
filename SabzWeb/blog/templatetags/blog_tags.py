@@ -38,6 +38,12 @@ def most_reading_time():
     return mrt['reading_time__max']
 
 
+@register.simple_tag
+def least_reading_time():
+    lrt = Post.published.aggregate(Min('reading_time'))
+    return lrt['reading_time__min']
+
+
 @register.inclusion_tag("partials/latest_posts.html")
 def latest_posts(count=4):
     l_posts = Post.published.order_by('-publish')[:count]
