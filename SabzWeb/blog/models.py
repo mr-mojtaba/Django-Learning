@@ -1,6 +1,6 @@
 from django.db import models
 
-# Standard python library.
+# Standard python libraries.
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -28,7 +28,8 @@ class Post(models.Model):
         User,
         on_delete=models.CASCADE,
         related_name="user_posts",
-        verbose_name="نویسنده"
+        verbose_name="نویسنده",
+        help_text=''
     )
 
     # To create fields.
@@ -39,6 +40,7 @@ class Post(models.Model):
     description = models.TextField(
         verbose_name="توضیحات"
     )
+
     slug = models.SlugField(
         max_length=250,
         verbose_name="نامک"
