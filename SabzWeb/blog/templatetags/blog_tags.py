@@ -1,10 +1,10 @@
 from django import template
 from ..models import Post, Comment, User
-from django.db.models import Count
+from django.db.models import Count, Max, Min
+from django.utils.safestring import mark_safe
+
 # Need to install (pip install markdown)
 from markdown import markdown
-from django.utils.safestring import mark_safe
-from django.db.models import Max, Min
 
 # Creating an object to access the simple_tag decorator
 register = template.Library()
@@ -42,6 +42,22 @@ def most_reading_time():
 def least_reading_time():
     lrt = Post.published.aggregate(Min('reading_time'))
     return lrt['reading_time__min']
+
+
+@register.simple_tag
+def most_reading_time_post():
+    post = Post.published.order_by('-reading_time').first()
+    if post:
+        return {'name': post.title, 'link': post.get_absolute_url}
+    return None
+
+
+@register.simple_tag
+def least_reading_time_post():
+    post = Post.published.order_by('reading_time').first()
+    if post:
+        return {'name': post.title, 'link': post.get_absolute_url}
+    return None
 
 
 @register.inclusion_tag("partials/latest_posts.html")
