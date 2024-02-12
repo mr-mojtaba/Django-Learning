@@ -49,7 +49,7 @@ class Post(models.Model):
     # Date of publication.
     publish = jmodels.jDateTimeField(
         default=timezone.now,
-        verbose_name="تاریخ انتشار"
+        verbose_name="تاریخ انتشار",
     )
 
     # Recording the moment the post was created.
