@@ -112,3 +112,13 @@ def post_comment(request, post_id):
         'comment': comment,
     }
     return render(request, "forms/comment.html", context)
+
+
+def create_post(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = PostForm()
+    return render(request, 'forms/create_post.html', {'form': form})
