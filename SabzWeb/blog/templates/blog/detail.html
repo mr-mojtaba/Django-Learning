@@ -3,12 +3,19 @@
 {% load blog_tags %}
 {% block title %}Post Detail{% endblock %}
 
+
 {% block content %}
+
     <h1>Post Detail</h1>
+
     <hr>
+
     <h2>{{ post.title }}</h2>
+
     <p>{{ post.description | markdown }}</p>
+
     <h4>Author: {{ post.author }}</h4>
+
     <h4>{{ post.publish | jformat:'%Y/%m/%d - %H:%m' }}</h4>
     <hr>
 
@@ -35,4 +42,5 @@
         {{ form.as_p }}
         <input type="submit" value="افزودن کامنت">
     </form>
+
 {% endblock %}
