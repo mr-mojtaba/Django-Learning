@@ -4,8 +4,15 @@
 
 {% block content %}
     <p>تعداد پست ها: {% total_posts %}</p>
-    <p>تعداد کامنت ها: {% total_posts %}</p>
-    <p>تاریخ آخرین پست: {% last_post_date %}</p>
+    <p>تعداد کامنت ها: {% total_comments %}</p>
+
+    <br>
+
+    <p>تاریخ آخرین پست:
+        {% last_post_date %}
+    </p>
+
+    <br>
 
     <p>
         بیشترین زمان مطالعه:
@@ -35,12 +42,32 @@
     </p>
 
 
+    <h4><a href="{% url 'blog:create_post' %}">ایجاد پست</a></h4>
+
+
+    {% most_active_users as most_active_users %}
+        {% if most_active_users %}
+            <h2>فعال ترین کاربران:</h2>
+            <ul>
+                {% for user in most_active_users %}
+                    <li>{{ user.username }} ({{ user.user_posts.count }} پست)</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+
+
+    <h2>:آخرین پست ها</h2>
     {% latest_posts 3 %}
 
-    <h2>محبوب ترین پست ها:</h2>
+    <br>
+
+    <h2>:محبوب ترین پست ها</h2>
     {% most_popular_posts 3 as pop_posts %}
     {% for post in pop_posts %}
-        <br>
         <a href="{{ post.get_absolute_url }}">{{post.title}}: with {{ post.comments_count }} comment</a>
+        <br>
     {% endfor %}
+
 {% endblock %}
