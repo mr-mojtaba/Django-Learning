@@ -37,6 +37,7 @@ class Post(models.Model):
         max_length=250,
         verbose_name="عنوان"
     )
+
     description = models.TextField(
         verbose_name="توضیحات"
     )
