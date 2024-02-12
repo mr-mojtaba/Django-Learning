@@ -1,6 +1,8 @@
 from django import template
-from ..models import Post, Comment, User
+from django.contrib.auth.models import User
+from ..models import Post, Comment
 from django.db.models import Count, Max, Min
+from django.db import models
 from django.utils.safestring import mark_safe
 
 # Need to install (pip install markdown)
@@ -22,7 +24,7 @@ def total_comments():
 
 @register.simple_tag()
 def last_post_date():
-    return Post.published.last().publish
+    return Post.published.first().publish.strftime('%H:%M - %Y/%m/%d')
 
 
 @register.simple_tag
@@ -58,6 +60,12 @@ def least_reading_time_post():
     if post:
         return {'name': post.title, 'link': post.get_absolute_url}
     return None
+
+
+@register.simple_tag()
+def most_active_users(count=2):
+    users = User.objects.annotate(num_posts=models.Count('user_posts')).order_by('-num_posts')[:count]
+    return users
 
 
 @register.inclusion_tag("partials/latest_posts.html")
