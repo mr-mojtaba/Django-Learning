@@ -118,7 +118,9 @@ def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
     else:
         form = PostForm()
     return render(request, 'forms/create_post.html', {'form': form})
