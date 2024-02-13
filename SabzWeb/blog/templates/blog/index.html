@@ -50,7 +50,14 @@
             <h2>فعال ترین کاربران:</h2>
             <ul>
                 {% for user in most_active_users %}
-                    <li>{{ user.username }} ({{ user.user_posts.count }} پست)</li>
+                    <li>
+                        {{ user.username }}
+                        :کاربر
+                        <br>
+                        تعداد پست ها:
+                        {{ user.user_posts.count }}
+                        پست
+                    </li>
                 {% endfor %}
             </ul>
         {% else %}
