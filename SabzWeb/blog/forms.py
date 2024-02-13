@@ -56,9 +56,12 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            'author',
             'title',
             'description',
             'slug',
             'reading_time',
         ]
+
+        widgets = {
+            'author': forms.HiddenInput(),
+        }
