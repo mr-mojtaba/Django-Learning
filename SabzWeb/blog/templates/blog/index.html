@@ -44,6 +44,8 @@
 
     <h4><a href="{% url 'blog:create_post' %}">ایجاد پست</a></h4>
 
+    <h4><a href="{% url 'blog:ticket' %}">ایجاد تیکت</a></h4>
+
 
     {% most_active_users as most_active_users %}
         {% if most_active_users %}
@@ -76,5 +78,7 @@
         <a href="{{ post.get_absolute_url }}">{{post.title}}: with {{ post.comments_count }} comment</a>
         <br>
     {% endfor %}
+
+    <br>
 
 {% endblock %}
