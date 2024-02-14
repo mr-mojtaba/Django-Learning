@@ -80,3 +80,11 @@ def latest_posts(count=4):
 @register.filter(name="markdown")
 def to_markdown(text):
     return mark_safe(markdown(text))
+
+
+@register.filter
+def censor_text(value):
+    censored_words = ['فحش', 'خراب', 'بدکاره']
+    for word in censored_words:
+        value = value.replace(word, "'سانسور'")
+    return value
