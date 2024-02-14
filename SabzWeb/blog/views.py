@@ -5,6 +5,8 @@ from .forms import *
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView, DetailView
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
 
 
 # Create your views here.
@@ -114,6 +116,7 @@ def post_comment(request, post_id):
     return render(request, "forms/comment.html", context)
 
 
+@login_required(login_url='/admin/login/')
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
@@ -121,6 +124,7 @@ def create_post(request):
             post = form.save(commit=False)
             post.author = request.user
             post.save()
+            form = PostForm
     else:
         form = PostForm()
     return render(request, 'forms/create_post.html', {'form': form})
