@@ -65,13 +65,3 @@ class PostForm(forms.ModelForm):
         widgets = {
             'author': forms.HiddenInput(),
         }
-
-    def clean(self):
-        cleaned_data = super().clean()
-        censored_words = ['فحش', 'خراب', 'بدکاره']
-        description = cleaned_data.get('description')
-        if description:
-            for word in censored_words:
-                description = description.replace(word, "'سانسور'")
-            cleaned_data['description'] = description
-        return cleaned_data
