@@ -1,12 +1,14 @@
 from django import template
 from django.contrib.auth.models import User
-from ..models import Post, Comment
-from django.db.models import Count, Max, Min
 from django.db import models
-from django.utils.safestring import mark_safe
+from django.db.models import Count, Max, Min
+from ..models import Post, Comment
 
 # Need to install (pip install markdown)
 from markdown import markdown
+
+# To build trust for markdown
+from django.utils.safestring import mark_safe
 
 # Creating an object to access the simple_tag decorator
 register = template.Library()
@@ -35,9 +37,31 @@ def most_popular_posts(count=5):
 
 
 @register.simple_tag
+def most_reading_time_post():
+    post = Post.published.order_by('-reading_time').first()
+    if post:
+        return {
+            'name': post.title,
+            'link': post.get_absolute_url,
+        }
+    return None
+
+
+@register.simple_tag
 def most_reading_time():
     mrt = Post.published.aggregate(Max('reading_time'))
     return mrt['reading_time__max']
+
+
+@register.simple_tag
+def least_reading_time_post():
+    post = Post.published.order_by('reading_time').first()
+    if post:
+        return {
+            'name': post.title,
+            'link': post.get_absolute_url,
+        }
+    return None
 
 
 @register.simple_tag
@@ -47,24 +71,10 @@ def least_reading_time():
 
 
 @register.simple_tag
-def most_reading_time_post():
-    post = Post.published.order_by('-reading_time').first()
-    if post:
-        return {'name': post.title, 'link': post.get_absolute_url}
-    return None
-
-
-@register.simple_tag
-def least_reading_time_post():
-    post = Post.published.order_by('reading_time').first()
-    if post:
-        return {'name': post.title, 'link': post.get_absolute_url}
-    return None
-
-
-@register.simple_tag()
 def most_active_users(count=2):
-    users = User.objects.annotate(num_posts=models.Count('user_posts')).order_by('-num_posts')[:count]
+    users = User.objects.annotate(
+        num_posts=models.Count('user_posts'),
+    ).order_by('-num_posts')[:count]
     return users
 
 
@@ -84,7 +94,11 @@ def to_markdown(text):
 
 @register.filter
 def censor_text(value):
-    censored_words = ['فحش', 'خراب', 'بدکاره']
+    censored_words = [
+        'فحش',
+        'خراب',
+        'بدکاره',
+    ]
     for word in censored_words:
         value = value.replace(word, "'سانسور'")
     return value
