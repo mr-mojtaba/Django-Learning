@@ -17,28 +17,28 @@
     <p>
         بیشترین زمان مطالعه:
         {% most_reading_time_post as most_read_post %}
-        {% if most_read_post %}
-            <a href="{{ most_read_post.link }}">{{ most_read_post.name }}</a>
-        {% else %}
-            No most reading time post found.
-        {% endif %}
-        با
-        {% most_reading_time %}
-        دقیقه
+            {% if most_read_post %}
+                <a href="{{ most_read_post.link }}">{{ most_read_post.name }}</a>
+            {% else %}
+                No most reading time post found.
+            {% endif %}
+            با
+            {% most_reading_time %}
+            دقیقه
     </p>
 
 
     <p>
         کمترین زمان مطالعه:
         {% least_reading_time_post as least_read_post %}
-        {% if least_read_post %}
-            <a href="{{ least_read_post.link }}">{{ least_read_post.name }}</a>
-        {% else %}
-            No least reading time post found.
-        {% endif %}
-        با
-        {% least_reading_time %}
-        دقیقه
+            {% if least_read_post %}
+                <a href="{{ least_read_post.link }}">{{ least_read_post.name }}</a>
+            {% else %}
+                No least reading time post found.
+            {% endif %}
+            با
+            {% least_reading_time %}
+            دقیقه
     </p>
 
 
@@ -66,7 +66,6 @@
             <p>No users found.</p>
         {% endif %}
 
-
     <h2>:آخرین پست ها</h2>
     {% latest_posts 3 %}
 
@@ -74,10 +73,15 @@
 
     <h2>:محبوب ترین پست ها</h2>
     {% most_popular_posts 3 as pop_posts %}
-    {% for post in pop_posts %}
-        <a href="{{ post.get_absolute_url }}">{{post.title}}: with {{ post.comments_count }} comment</a>
-        <br>
-    {% endfor %}
+        {% for post in pop_posts %}
+            <a href="{{ post.get_absolute_url }}">
+                با
+                {{ post.comments_count }}
+                کامنت
+                :{{post.title}}
+            </a>
+            <br>
+        {% endfor %}
 
     <br>
 
