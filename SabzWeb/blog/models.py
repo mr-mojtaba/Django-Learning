@@ -47,19 +47,22 @@ class Post(models.Model):
         verbose_name="نامک"
     )
 
+    # 01
     # Date of publication.
-    publish = jmodels.jDateTimeField(
+    publish = models.DateTimeField(
         default=timezone.now,
         verbose_name="تاریخ انتشار",
     )
 
+    # 02
     # Recording the moment the post was created.
-    created = jmodels.jDateTimeField(
+    created = models.DateTimeField(
         auto_now_add=True
     )
 
+    # 03
     # Date of update.
-    updated = jmodels.jDateTimeField(
+    updated = models.DateTimeField(
         auto_now=True
     )
 
@@ -77,7 +80,8 @@ class Post(models.Model):
 
     # Keeping the default manager(objects).
     # objects = models.Manager()
-    objects = jmodels.jManager()
+    # 04
+    objects = models.Manager()
     # Create object from PublishedManager.
     published = PublishedManager()
 
@@ -149,12 +153,14 @@ class Comment(models.Model):
         verbose_name="متن کامنت",
     )
 
-    created = jmodels.jDateTimeField(
+    # 05
+    created = models.DateTimeField(
         auto_now_add=True,
         verbose_name="تاریخ ایجاد",
     )
 
-    updated = jmodels.jDateTimeField(
+    # 06
+    updated = models.DateTimeField(
         auto_now=True,
         verbose_name="تاریخ ویرایش",
     )
