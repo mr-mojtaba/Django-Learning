@@ -8,7 +8,6 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 
 
-
 # Create your views here.
 def index(request):
     return render(request, "blog/index.html")
@@ -49,17 +48,29 @@ class PostListView(ListView):
 
 
 def post_detail(request, id):
-    post = get_object_or_404(Post, id=id, status=Post.Status.PUBLISHED)
+    post = get_object_or_404(
+        Post,
+        id=id,
+        status=Post.Status.PUBLISHED,
+
+    )
     # Creating a variable and put the approved comments in it.
     comments = post.comments.filter(active=True)
+
     # Creating an empty form.
     form = CommentForm()
+
     context = {
         'post': post,
         'form': form,
         'comments': comments,
     }
-    return render(request, "blog/detail.html", context)
+
+    return render(
+        request,
+        "blog/detail.html",
+        context,
+    )
 
 # class PostDetailView(DetailView):
 #     model = Post
@@ -96,30 +107,48 @@ def ticket(request):
         form = TicketForm()
 
     # Show ticket.html page.
-    return render(request, "forms/ticket.html", {'form': form})
+    return render(
+        request,
+        "forms/ticket.html",
+        {'form': form},
+    )
 
 
 @require_POST
 def post_comment(request, post_id):
-    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    post = get_object_or_404(
+        Post,
+        id=post_id,
+        status=Post.Status.PUBLISHED,
+    )
+
     comment = None
+
     form = CommentForm(data=request.POST)
+
     if form.is_valid():
         comment = form.save(commit=False)
         comment.post = post
         comment.save()
+
     context = {
         'post': post,
         'form': form,
         'comment': comment,
     }
-    return render(request, "forms/comment.html", context)
+
+    return render(
+        request,
+        "forms/comment.html",
+        context,
+    )
 
 
 @login_required(login_url='/admin/login/')
 def create_post(request):
     if request.method == 'POST':
         form = PostForm(request.POST)
+
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
@@ -127,4 +156,9 @@ def create_post(request):
             form = PostForm
     else:
         form = PostForm()
-    return render(request, 'forms/create_post.html', {'form': form})
+
+    return render(
+        request,
+        'forms/create_post.html',
+        {'form': form},
+    )
