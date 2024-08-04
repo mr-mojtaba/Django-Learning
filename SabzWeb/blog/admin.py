@@ -79,6 +79,12 @@ class TicketAdmin(admin.ModelAdmin):
         'phone',
     ]
 
+    list_display_links = [
+        'name',
+        'subject',
+        'phone',
+    ]
+
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
