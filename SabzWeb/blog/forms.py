@@ -65,3 +65,7 @@ class PostForm(forms.ModelForm):
         widgets = {
             'author': forms.HiddenInput(),
         }
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField()
