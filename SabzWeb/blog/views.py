@@ -162,3 +162,21 @@ def create_post(request):
         'forms/create_post.html',
         {'form': form},
     )
+
+
+def post_search(request):
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(data=request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results1 = Post.published.filter(title__icontains=query)
+            results2 = Post.published.filter(description__icontains=query)
+            results = results1 | results2
+            # print(results)
+    context = {
+        'query': query,
+        'results': results,
+    }
+    return render(request, 'blog/search.html', context)
