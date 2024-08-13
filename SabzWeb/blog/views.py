@@ -6,8 +6,9 @@ from .forms import *
 from django.views.generic import ListView, DetailView
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+# from django.db.models import Q
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.contrib.postgres.search import TrigramSimilarity
 
 
 # Create your views here.
@@ -177,28 +178,46 @@ def post_search(request):
 
         if form.is_valid():
             query = form.cleaned_data['query']
-            search_vector = (
-                    # ایجاد آبجکت برای هر فیلد و تعیین امتیاز برای اولویت بندی آن ها با استفاده از weight
-                    SearchVector('title', weight='A',)
-                    + SearchVector('description', weight='B',)
-                    + SearchVector('slug', weight='C',)
-            )
+            # search_vector = (
+            #         # ایجاد آبجکت برای هر فیلد و تعیین امتیاز برای اولویت بندی آن ها با استفاده از weight
+            #         SearchVector('title', weight='A',)
+            #         + SearchVector('description', weight='B',)
+            #         + SearchVector('slug', weight='C',)
+            # )
             # ایجاد آبجکت و مقدار دهی
             # در جستجو ریشه یابی می کند
-            search_query = SearchQuery(query)
+            # search_query = SearchQuery(query)
             # نتایج جستجو را رتبه بندی می کند
-            search_rank = SearchRank(search_vector, search_query)
+            # search_rank = SearchRank(search_vector, search_query)
 
             # مشخص کردن مقادیر results
-            results = Post.published.annotate(
-                search=search_vector,
-                rank=search_rank,
+            # results = Post.published.annotate(
+            #     search=search_vector,
+            #     rank=search_rank,
+            # ).filter(
+            #     search=search_query
+            # ).order_by(
+            #     # مرتب کردن بر اساس رنکینگ
+            #     '-rank'
+            # )
+
+            results1 = Post.published.annotate(
+                similarity=TrigramSimilarity('title', query)
             ).filter(
-                search=search_query
+                similarity__gt=0.1
             ).order_by(
-                # مرتب کردن بر اساس رنکینگ
-                '-rank'
+                '-similarity'
             )
+
+            results2 = Post.published.annotate(
+                similarity=TrigramSimilarity('description', query)
+            ).filter(
+                similarity__gt=0.1
+            ).order_by(
+                '-similarity'
+            )
+
+            results = (results1 | results2).order_by('-similarity')
 
     context = {
         'query': query,
