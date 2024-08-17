@@ -113,3 +113,13 @@ class CommentAdmin(admin.ModelAdmin):
     list_editable = [
         'active',
     ]
+
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    # Showing these fields in the top bar of the posts display.
+    list_display = [
+        'post',
+        'title',
+        'created'
+    ]
