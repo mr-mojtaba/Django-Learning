@@ -12,6 +12,22 @@ admin.sites.AdminSite.site_header = "پنل مدیریت جنگو"
 admin.sites.AdminSite.index_title = "پنل مدیریت"
 
 
+#Inlines
+class ImageInline(admin.StackedInline):
+    model = Image
+    extra = 0
+
+
+class CommentInline(admin.TabularInline):
+    model = Comment
+    extra = 0
+    readonly_fields = (
+        'name',
+        'created',
+        'body',
+    )
+
+
 # Register your models here.
 
 # Customization of the admin panel.
@@ -68,6 +84,11 @@ class PostAdmin(admin.ModelAdmin):
         'title',
         'author',
         'publish',
+    ]
+
+    inlines = [
+        ImageInline,
+        CommentInline
     ]
 
 
