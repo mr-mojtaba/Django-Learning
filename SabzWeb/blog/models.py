@@ -8,6 +8,9 @@ from django.urls import reverse
 # Need to install ( pip install django_jalali )
 from django_jalali.db import models as jmodels
 
+# Need to install ( pip install django_resized )
+from django_resized import ResizedImageField
+
 
 # Managers
 class PublishedManager(models.Manager):
@@ -29,22 +32,22 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         related_name="user_posts",
         verbose_name="نویسنده",
-        help_text=''
+        help_text='',
     )
 
     # To create fields.
     title = models.CharField(
         max_length=250,
-        verbose_name="عنوان"
+        verbose_name="عنوان",
     )
 
     description = models.TextField(
-        verbose_name="توضیحات"
+        verbose_name="توضیحات",
     )
 
     slug = models.SlugField(
         max_length=250,
-        verbose_name="نامک"
+        verbose_name="نامک",
     )
 
     # Date of publication.
@@ -55,12 +58,12 @@ class Post(models.Model):
 
     # Recording the moment the post was created.
     created = jmodels.jDateTimeField(
-        auto_now_add=True
+        auto_now_add=True,
     )
 
     # Date of update.
     updated = jmodels.jDateTimeField(
-        auto_now=True
+        auto_now=True,
     )
 
     # Creating a field for Status class.
@@ -68,7 +71,7 @@ class Post(models.Model):
         max_length=250,
         choices=Status.choices,
         default=Status.DRAFT,
-        verbose_name="وضعیت"
+        verbose_name="وضعیت",
     )
 
     reading_time = models.PositiveIntegerField(
@@ -102,26 +105,26 @@ class Post(models.Model):
 
 class Ticket(models.Model):
     message = models.TextField(
-        verbose_name="پیام"
+        verbose_name="پیام",
     )
 
     name = models.CharField(
         max_length=250,
-        verbose_name="نام"
+        verbose_name="نام",
     )
 
     email = models.EmailField(
-        verbose_name="ایمیل"
+        verbose_name="ایمیل",
     )
 
     phone = models.CharField(
         max_length=11,
-        verbose_name="شماره تماس"
+        verbose_name="شماره تماس",
     )
 
     subject = models.CharField(
         max_length=250,
-        verbose_name="موضوع"
+        verbose_name="موضوع",
     )
 
     class Meta:
@@ -177,11 +180,37 @@ class Comment(models.Model):
 
 
 class Image(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='images', verbose_name='پست')
-    image_file = models.ImageField(upload_to='post_images/', verbose_name='تصویر')
-    title = models.CharField(max_length=250, verbose_name='عنوان', null=True, blank=True)
-    description = models.TextField(verbose_name='توضیحات', null=True, blank=True)
-    created = jmodels.jDateTimeField(auto_now_add=True)
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='images',
+        verbose_name='پست',
+    )
+
+    image_file = ResizedImageField(
+        upload_to='post_images/',
+        size=[500, 500],
+        quality=75,
+        crop=['middle', 'center'],
+        verbose_name='تصویر',
+    )
+
+    title = models.CharField(
+        max_length=250,
+        verbose_name='عنوان',
+        null=True,
+        blank=True,
+    )
+
+    description = models.TextField(
+        verbose_name='توضیحات',
+        null=True,
+        blank=True,
+    )
+
+    created = jmodels.jDateTimeField(
+        auto_now_add=True,
+    )
 
     class Meta:
         ordering = ['created']
