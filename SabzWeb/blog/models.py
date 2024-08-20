@@ -11,6 +11,10 @@ from django_jalali.db import models as jmodels
 # Need to install ( pip install django_resized )
 from django_resized import ResizedImageField
 
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+import os
+
 
 # Managers
 class PublishedManager(models.Manager):
@@ -222,3 +226,11 @@ class Image(models.Model):
 
     def __str__(self):
         return f'{self.title}' if self.title else "None"
+
+
+# Signal to delete the image file after the object is deleted
+@receiver(post_delete, sender=Image)
+def delete_image_file_on_delete(sender, instance, **kwargs):
+    if instance.image_file:
+        if os.path.isfile(instance.image_file.path):
+            os.remove(instance.image_file.path)
