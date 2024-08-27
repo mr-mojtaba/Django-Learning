@@ -236,7 +236,7 @@ class Image(models.Model):
         verbose_name_plural = 'تصویر ها'
 
     def __str__(self):
-        return f'{self.title}' if self.title else "None"
+        return self.title if self.title else self.image_file.name
 
 
 # Signal to delete the image file after the object is deleted
