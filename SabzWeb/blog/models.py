@@ -1,15 +1,17 @@
 from django.db import models
 
-# Standard python libraries.
+# Standard python library imports.
 from django.utils import timezone
 from django.contrib.auth.models import User
 from django.urls import reverse
 
-# Need to install ( pip install django_jalali )
+# Importing required modules from django_jalali
+# (Install with: pip install django_jalali)
 from django_jalali.db import models as jmodels
 import jdatetime
 
-# Need to install ( pip install django_resized )
+# Importing ResizedImageField from django_resized
+# (Install with: pip install django_resized)
 from django_resized import ResizedImageField
 
 from django.db.models.signals import post_delete
@@ -17,9 +19,13 @@ from django.dispatch import receiver
 import os
 
 
-# To determine the year of the image folder name.
 def get_upload_to(instance, filename):
-    # Check if created has a value, otherwise use the current year
+    """
+    Function to determine the file upload path for images.
+    Uses the year of creation for organizing images into folders.
+    """
+
+    # Check if created has a value, otherwise use the current year.
     if instance.created:
         year = instance.created.year
     else:
@@ -27,21 +33,48 @@ def get_upload_to(instance, filename):
     return f'post_images/{year}/{filename}'
 
 
-# Managers
+# Custom Managers
 class PublishedManager(models.Manager):
+    """
+    Manager to handle queries for published posts.
+    """
     def get_queryset(self):
+        # Filter queryset to only include published posts.
         return super().get_queryset().filter(status=Post.Status.PUBLISHED)
 
 
-# Create your models here.
+class DraftManager(models.Manager):
+    """
+    Manager to handle queries for draft posts.
+    """
+    def get_queryset(self):
+        # Filter queryset to only include draft posts.
+        return super().get_queryset().filter(status=Post.Status.DRAFT)
+
+
+class RejectedManager(models.Manager):
+    """
+    Manager to handle queries for rejected posts.
+    """
+    def get_queryset(self):
+        # Filter queryset to only include rejected posts.
+        return super().get_queryset().filter(status=Post.Status.REJECTED)
+
+
+# Model for Blog Post.
 class Post(models.Model):
-    # Creating a class for posts status.
+    """
+    Model representing a blog post.
+    """
+
+    # Choices for the status of a post.
     class Status(models.TextChoices):
         DRAFT = ' DR', 'Draft'
         PUBLISHED = 'PB', 'Published'
         REJECTED = 'RJ', 'Rejected'
 
-    # Creating a many-to-one field for user.
+    # Fields for the Post model
+    # Foreign key to the User model representing the author of the post.
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -50,7 +83,6 @@ class Post(models.Model):
         help_text='',
     )
 
-    # To create fields.
     title = models.CharField(
         max_length=250,
         verbose_name="عنوان",
@@ -65,23 +97,19 @@ class Post(models.Model):
         verbose_name="نامک",
     )
 
-    # Date of publication.
     publish = jmodels.jDateTimeField(
         default=timezone.now,
         verbose_name="تاریخ انتشار",
     )
 
-    # Recording the moment the post was created.
     created = jmodels.jDateTimeField(
         auto_now_add=True,
     )
 
-    # Date of update.
     updated = jmodels.jDateTimeField(
         auto_now=True,
     )
 
-    # Creating a field for Status class.
     status = models.CharField(
         max_length=250,
         choices=Status.choices,
@@ -94,31 +122,45 @@ class Post(models.Model):
     )
 
     # Keeping the default manager(objects).
-    # objects = models.Manager()
     objects = jmodels.jManager()
-    # Create object from PublishedManager.
+
+    # Managers for custom query sets.
     published = PublishedManager()
+    draft = DraftManager()
+    rejected = RejectedManager()
 
     class Meta:
-        # Sorting the table by publish.
+        """
+        Meta options for Post model.
+        """
+
+        # Default ordering by publish date in descending order.
         ordering = ['-publish']
-        # Specifying the indexing.
+        # Indexing for faster queries on publish date.
         indexes = [
             models.Index(fields=['-publish'])
         ]
-        # To change the name of the application in the Django panel.
         verbose_name = "پست"
         verbose_name_plural = "پست ها"
 
-    # Overwriting the method as the title.
     def __str__(self):
+        """
+        String representation of the Post model.
+        """
         return self.title
 
     def get_absolute_url(self):
+        """
+        Method to get the URL for the post detail view.
+        """
         return reverse('blog:post_detail', args=[self.id])
 
 
 class Ticket(models.Model):
+    """
+    Model representing a ticket submitted by users.
+    """
+
     message = models.TextField(
         verbose_name="پیام",
     )
@@ -143,14 +185,24 @@ class Ticket(models.Model):
     )
 
     class Meta:
+        """
+        Meta options for Ticket model.
+        """
         verbose_name = "تیکت"
         verbose_name_plural = "تیکت ها"
 
     def __str__(self):
+        """
+        String representation of the Ticket model.
+        """
         return self.subject
 
 
 class Comment(models.Model):
+    """
+    Model representing a comment on a blog post.
+    """
+
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -183,7 +235,13 @@ class Comment(models.Model):
     )
 
     class Meta:
+        """
+        Meta options for Comment model.
+        """
+
+        # Default ordering by creation date in ascending order.
         ordering = ['created']
+        # Indexing for faster queries on creation date.
         indexes = [
             models.Index(fields=['created'])
         ]
@@ -191,10 +249,17 @@ class Comment(models.Model):
         verbose_name_plural = "کامنت ها"
 
     def __str__(self):
+        """
+        String representation of the Comment model.
+        """
         return f"{self.name}: {self.post}"
 
 
 class Image(models.Model):
+    """
+    Model representing an image associated with a blog post.
+    """
+
     post = models.ForeignKey(
         Post,
         on_delete=models.CASCADE,
@@ -228,20 +293,36 @@ class Image(models.Model):
     )
 
     class Meta:
-        ordering = ['created']
+        """
+        Meta options for Image model.
+        """
+
+        # Default ordering by creation date in ascending order.
+        ordering = [
+            'created',
+        ]
+
+        # Indexing for faster queries on creation date.
         indexes = [
             models.Index(fields=['created'])
         ]
+
         verbose_name = 'تصویر'
-        verbose_name_plural = 'تصویر ها'
+        verbose_name_plural = 'تصاویر'
 
     def __str__(self):
+        """
+        String representation of the Image model.
+        """
         return self.title if self.title else self.image_file.name
 
 
-# Signal to delete the image file after the object is deleted
+# Signal to delete the image file after the object is deleted.
 @receiver(post_delete, sender=Image)
 def delete_image_file_on_delete(sender, instance, **kwargs):
+    """
+    Signal receiver to delete the image file from the filesystem when an Image instance is deleted.
+    """
     if instance.image_file:
         if os.path.isfile(instance.image_file.path):
             os.remove(instance.image_file.path)
