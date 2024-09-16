@@ -311,3 +311,15 @@ def profile(request):
         'blog/profile.html',
         context,
     )
+
+
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('blog:profile')
+    return render(
+        request,
+        'forms/delete-post.html',
+        {'post': post},
+    )
