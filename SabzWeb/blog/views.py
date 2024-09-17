@@ -189,7 +189,7 @@ def create_post(request):
     # Render the post creation form page.
     return render(
         request,
-        'forms/create_post.html',
+        'forms/create-post.html',
         {'form': form},
     )
 
@@ -322,4 +322,55 @@ def delete_post(request, post_id):
         request,
         'forms/delete-post.html',
         {'post': post},
+    )
+
+
+@login_required(login_url='/admin/login/')
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        # Initialize the form with POST data.
+        form = CreatePostForm(request.POST, request.FILES, instance=post)
+
+        # Validate the form data.
+        if form.is_valid():
+            # Save the post without committing.
+            post = form.save(commit=False)
+            # Assign the current user as the author of the post.
+            post.author = request.user
+            # Save the post to the database.
+            post.save()
+
+            Image.objects.create(image_file=form.cleaned_data['image1'], post=post)
+            Image.objects.create(image_file=form.cleaned_data['image2'], post=post)
+
+            # Reinitialize the form after saving.
+            # form = CreatePostForm
+            return redirect('blog:profile')
+    else:
+        # Initialize an empty form.
+        form = CreatePostForm(instance=post)
+
+    context = {
+        'form': form,
+        'post': post,
+    }
+
+    # Render the post creation form page.
+    return render(
+        request,
+        'forms/edit-post.html',
+        context,
+    )
+
+
+def delete_image(request, image_id, post_id):
+    image = get_object_or_404(Image, id=image_id)
+    if request.method == 'POST':
+        image.delete()
+        return redirect('blog:edit_post', post_id=post_id)
+    return render(
+        request,
+        'forms/delete-image.html',
+        {'image': image},
     )

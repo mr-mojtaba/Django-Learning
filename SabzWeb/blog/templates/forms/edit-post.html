@@ -1,12 +1,24 @@
 {% extends "parent/base.html" %}
 {% load jformat %}
-{% block title %}Create POST{% endblock %}
+{% block title %}Edit Post{% endblock %}
 
 {% block content %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="افزودن پست">
+        <input type="submit" value="ذخیره">
+        <br>
+
+        {% if post.images %}
+            <p>
+                تصاویر:
+            </p>
+            {% for img in post.images.all %}
+                <img width="300px" height="200px" src="{{ img.image_file.url }}" alt="{{ img.title }}">
+                <a href="{% url 'blog:delete_image' img.post_id img.id %}">حذف تصویر</a>
+                <br>
+            {% endfor %}
+        {% endif %}
     </form>
 
     {% if form.errors %}
