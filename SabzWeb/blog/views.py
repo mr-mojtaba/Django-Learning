@@ -341,8 +341,14 @@ def edit_post(request, post_id):
             # Save the post to the database.
             post.save()
 
-            Image.objects.create(image_file=form.cleaned_data['image1'], post=post)
-            Image.objects.create(image_file=form.cleaned_data['image2'], post=post)
+            Image.objects.create(
+                image_file=form.cleaned_data['image1'],
+                post=post,
+            )
+            Image.objects.create(
+                image_file=form.cleaned_data['image2'],
+                post=post,
+            )
 
             # Reinitialize the form after saving.
             # form = CreatePostForm
