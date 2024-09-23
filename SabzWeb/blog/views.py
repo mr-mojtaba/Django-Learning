@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 # from django.db.models import Q
 # from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.contrib.postgres.search import TrigramSimilarity
+from django.contrib.auth import authenticate, login
 
 
 # View to render the index page.
@@ -374,6 +375,7 @@ def edit_post(request, post_id):
     )
 
 
+@login_required(login_url='/admin/login/')
 def delete_image(request, image_id, post_id):
     image = get_object_or_404(Image, id=image_id)
 
@@ -385,4 +387,34 @@ def delete_image(request, image_id, post_id):
         request,
         'forms/delete-image.html',
         {'image': image},
+    )
+
+
+def user_login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = authenticate(
+                request,
+                username=cd['username'],
+                password=cd['password'],
+            )
+
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('blog:profile')
+                else:
+                    return HttpResponse('Your account is disabled')
+            else:
+                return HttpResponse('You are not logged in')
+    else:
+        form = LoginForm()
+
+    return render(
+        request,
+        'forms/user-login.html',
+        {'form': form},
     )

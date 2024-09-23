@@ -78,8 +78,12 @@ class CreatePostForm(forms.ModelForm):
     Form for creating and updating posts.
     """
 
-    image1 = forms.ImageField(label='تصویر اول')
-    image2 = forms.ImageField(label='تصویر دوم')
+    image1 = forms.ImageField(
+        label='تصویر اول',
+    )
+    image2 = forms.ImageField(
+        label='تصویر دوم',
+    )
 
     class Meta:
         """
@@ -103,3 +107,15 @@ class SearchForm(forms.Form):
 
     # Field for entering search query.
     query = forms.CharField()
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        max_length=250,
+        required=True,
+    )
+    password = forms.CharField(
+        max_length=250,
+        required=True,
+        widget=forms.PasswordInput,
+    )
