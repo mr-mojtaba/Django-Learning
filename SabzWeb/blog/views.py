@@ -313,11 +313,14 @@ def profile(request):
     )
 
 
+@login_required(login_url='/admin/login/')
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+
     if request.method == 'POST':
         post.delete()
         return redirect('blog:profile')
+
     return render(
         request,
         'forms/delete-post.html',
@@ -328,6 +331,7 @@ def delete_post(request, post_id):
 @login_required(login_url='/admin/login/')
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
+
     if request.method == 'POST':
         # Initialize the form with POST data.
         form = CreatePostForm(request.POST, request.FILES, instance=post)
@@ -372,9 +376,11 @@ def edit_post(request, post_id):
 
 def delete_image(request, image_id, post_id):
     image = get_object_or_404(Image, id=image_id)
+
     if request.method == 'POST':
         image.delete()
         return redirect('blog:edit_post', post_id=post_id)
+
     return render(
         request,
         'forms/delete-image.html',
