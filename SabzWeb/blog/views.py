@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 # from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.contrib.postgres.search import TrigramSimilarity
 from django.contrib.auth import authenticate, login
+from django.urls import reverse_lazy
 
 
 # View to render the index page.
@@ -162,7 +163,7 @@ def post_comment(request, post_id):
     )
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/blog/login/')
 def create_post(request):
     if request.method == 'POST':
         # Initialize the form with POST data.
@@ -298,7 +299,7 @@ def post_search(request):
     )
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/blog/login/')
 def profile(request):
     user = request.user
     posts = Post.published.filter(author=user)
@@ -314,7 +315,7 @@ def profile(request):
     )
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/blog/login/')
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -329,7 +330,7 @@ def delete_post(request, post_id):
     )
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/blog/login/')
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -375,7 +376,7 @@ def edit_post(request, post_id):
     )
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/blog/login/')
 def delete_image(request, image_id, post_id):
     image = get_object_or_404(Image, id=image_id)
 
