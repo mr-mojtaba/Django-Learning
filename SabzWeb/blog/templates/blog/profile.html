@@ -27,4 +27,11 @@
         </tr>
     {% endfor %}
     </table>
+
+    <br>
+
+    <form method="POST" action="{% url 'blog:logout' %}">
+        {% csrf_token %}
+        <button type="submit">خروج</button>
+    </form>
 {% endblock %}
